@@ -1,0 +1,14 @@
+{
+    "name": "Coffee Shop Management System",
+    "build": { "dockerfile": "Dockerfile" },
+    "containerEnv": {
+        "DB_HOST": "127.0.0.1",
+        "DB_USER": "coffeeshop",
+        "DB_PASS": "coffeeshop"
+    },
+    "postStartCommand": "bash .devcontainer/start.sh",
+    "forwardPorts": [8080],
+    "portsAttributes": {
+        "8080": { "label": "Coffee Shop", "onAutoForward": "openPreview" }
+    }
+}

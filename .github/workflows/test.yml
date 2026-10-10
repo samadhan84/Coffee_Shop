@@ -1,0 +1,76 @@
+# Runs the app on GitHub's servers on every push and checks the main pages and workflows.
+name: Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DB_HOST: 127.0.0.1
+      DB_USER: root
+      DB_PASS: root
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql
+
+      - name: Check PHP syntax
+        run: find . -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Start MySQL and import database
+        run: |
+          sudo systemctl start mysql
+          mysql -h 127.0.0.1 -u root -proot < database/coffeeshop.sql
+
+      - name: Start web server
+        run: |
+          php -S 127.0.0.1:8080 -t . > php-server.log 2>&1 &
+          sleep 2
+
+      - name: Smoke test
+        run: |
+          B=http://127.0.0.1:8080
+          fail() { echo "FAIL: $1"; cat php-server.log; exit 1; }
+          token() { curl -s -c "$1" -b "$1" "$B/$2" | grep -o 'name="csrf" value="[^"]*' | head -1 | cut -d'"' -f4; }
+          login() { rm -f "$1"; T=$(token "$1" login.php); curl -s -c "$1" -b "$1" -o /dev/null -d "csrf=$T&email=$2&password=$3" "$B/login.php"; }
+          check() { # cookie-jar path expected-status
+            code=$(curl -s -b "$1" -o page.html -w '%{http_code}' "$B/$2")
+            [ "$code" = "$3" ] || fail "$2 returned $code, expected $3"
+            ! grep -qiE 'fatal error|warning:|notice:|deprecated:' page.html || fail "$2 shows a PHP error"
+            echo "ok  $2 ($code)"
+          }
+
+          check none.txt index.php 200
+          check none.txt login.php 200
+          check none.txt signup.php 200
+
+          login admin.txt admin@coffeeshop.com admin123
+          for p in admin/index.php admin/pos.php admin/orders.php admin/order_view.php?id=1 admin/menu.php \
+                   admin/inventory.php admin/customers.php admin/employees.php admin/reports.php \
+                   admin/users.php admin/settings.php receipt.php?id=1; do
+            check admin.txt "$p" 200
+          done
+
+          # Staff cannot open admin-only pages.
+          login staff.txt staff@coffeeshop.com staff123
+          check staff.txt admin/pos.php 200
+          check staff.txt admin/reports.php 403
+
+          # Customer: add 2 x Cappuccino (id 2) to the cart and check out.
+          login cust.txt raj123@gmail.com customer123
+          T=$(token cust.txt dashboard.php)
+          curl -s -c cust.txt -b cust.txt -o /dev/null -d "csrf=$T&item_id=2&qty=2" "$B/dashboard.php"
+          curl -s -c cust.txt -b cust.txt -o /dev/null -d "csrf=$T&action=checkout&payment_method=upi" "$B/cart.php"
+          total=$(mysql -h 127.0.0.1 -u root -proot -N coffeeshop -e "SELECT total FROM orders ORDER BY id DESC LIMIT 1")
+          # 280 subtotal + 5% tax (14) + 20 packing = 314
+          [ "$total" = "314.00" ] || fail "online order total was $total, expected 314.00"
+          echo "ok  customer checkout (total $total)"
+          check admin.txt admin/reports.php 200

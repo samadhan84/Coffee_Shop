@@ -30,6 +30,18 @@ orders, see their order history and rate completed orders.
 | **Staff** | Dashboard, POS, orders, inventory (restock), customers |
 | **Customer** | Website menu, cart, own orders, profile |
 
+## Run it on GitHub (Codespaces) — no installation needed
+
+1. On the repository page, click **Code → Codespaces → Create codespace on this branch**.
+2. Wait 2–3 minutes while it builds. PHP and MySQL are installed and the sample database is imported automatically.
+3. When the app is ready, a preview of it opens. If it doesn't, go to the **Ports** tab and open port **8080**.
+
+To share the running app with someone, right-click port 8080 in the **Ports** tab and choose
+**Port Visibility → Public**. The link only works while the codespace is running.
+
+Every push also runs the **Test** workflow (the **Actions** tab). It starts the app on GitHub's servers,
+opens every page and places a test order.
+
 ## Setup (XAMPP / WAMP)
 
 1. Install [XAMPP](https://www.apachefriends.org/) and start **Apache** and **MySQL**.
