@@ -1,13 +1,16 @@
 <?php
 // Session cart for online (customer) orders: $_SESSION['cart'] = [menu_item_id => quantity].
 
-function cart_add(int $itemId, int $qty): void
+/** Returns false when the item does not exist or is unavailable. */
+function cart_add(int $itemId, int $qty): bool
 {
     $stmt = db()->prepare('SELECT 1 FROM menu_items WHERE id = ? AND is_available = 1');
     $stmt->execute([$itemId]);
-    if ($stmt->fetch() && $qty > 0) {
-        $_SESSION['cart'][$itemId] = min(50, ($_SESSION['cart'][$itemId] ?? 0) + $qty);
+    if (!$stmt->fetch() || $qty <= 0) {
+        return false;
     }
+    $_SESSION['cart'][$itemId] = min(50, ($_SESSION['cart'][$itemId] ?? 0) + $qty);
+    return true;
 }
 
 function cart_set(int $itemId, int $qty): void

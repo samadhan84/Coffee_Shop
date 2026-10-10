@@ -8,8 +8,11 @@ $customer = customer_for_user($user);
 
 if (is_post()) {
     verify_csrf();
-    cart_add((int) post('item_id'), max(1, (int) post('qty', 1)));
-    flash('success', 'Item added to your cart.');
+    if (cart_add((int) post('item_id'), max(1, (int) post('qty', 1)))) {
+        flash('success', 'Item added to your cart.');
+    } else {
+        flash('error', 'Sorry, that item is not available.');
+    }
     redirect('dashboard.php#menu');
 }
 
@@ -19,7 +22,7 @@ $stmt->execute([$customer['id']]);
 $totalOrders = (int) $stmt->fetchColumn();
 $avgRating = db()->query('SELECT ROUND(AVG(rating), 1) FROM orders WHERE rating IS NOT NULL')->fetchColumn() ?: '–';
 
-$menu = db()->query('SELECT m.*, c.name AS category FROM menu_items m JOIN categories c ON c.id = m.category_id
+$menu = db()->query('SELECT c.name AS category, m.* FROM menu_items m JOIN categories c ON c.id = m.category_id
                      WHERE m.is_available = 1 ORDER BY c.id, m.name')->fetchAll(PDO::FETCH_GROUP);
 
 page_head('Dashboard', 'app-body');
