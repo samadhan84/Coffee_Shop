@@ -18,6 +18,8 @@ function db(): PDO
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES   => false,
             ]);
+            // Keep MySQL's NOW()/CURDATE() in the same timezone as PHP (hosts often run on UTC).
+            $pdo->exec("SET time_zone = '" . date('P') . "'");
         } catch (PDOException $e) {
             http_response_code(500);
             exit('<h2>Database connection failed</h2><p>Check config/config.php and make sure the '

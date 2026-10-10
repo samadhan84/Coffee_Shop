@@ -28,7 +28,8 @@ jobs:
       - name: Start MySQL and import database
         run: |
           sudo systemctl start mysql
-          mysql -h 127.0.0.1 -u root -proot < database/coffeeshop.sql
+          mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE coffeeshop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+          mysql -h 127.0.0.1 -u root -proot coffeeshop < database/coffeeshop.sql
 
       - name: Start web server
         run: |

@@ -11,7 +11,8 @@ done
 
 if ! sudo mysql -e "USE coffeeshop" 2>/dev/null; then
     echo "Importing database/coffeeshop.sql ..."
-    sudo mysql < database/coffeeshop.sql
+    sudo mysql -e "CREATE DATABASE coffeeshop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+    sudo mysql coffeeshop < database/coffeeshop.sql
 fi
 sudo mysql -e "CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
                CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';

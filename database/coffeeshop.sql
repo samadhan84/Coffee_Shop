@@ -1,11 +1,10 @@
 -- ------------------------------------------------------------
 -- Coffee Shop Management System - MySQL schema + sample data
--- Import with:  mysql -u root -p < database/coffeeshop.sql
--- (or use phpMyAdmin -> Import)
+-- 1. Create an empty database (e.g. "coffeeshop", or the one your host gives you)
+-- 2. Select it in phpMyAdmin -> Import -> choose this file
+--    or:  mysql -u root -p coffeeshop < database/coffeeshop.sql
 -- ------------------------------------------------------------
 
-CREATE DATABASE IF NOT EXISTS coffeeshop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE coffeeshop;
 SET NAMES utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 0;
