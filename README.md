@@ -65,6 +65,24 @@ opens every page and places a test order.
 The `config/`, `includes/` and `database/` folders include `.htaccess` files that block direct web access,
 so your database details and SQL file can't be downloaded from the live site.
 
+## Android app
+
+The `android/` folder is a small Android app that opens the live site
+(**https://gauravcoffeeshop.site.je/**) full screen, so the shop can be used from a phone like a normal app.
+
+**Download:** [CoffeeShop.apk](https://github.com/samadhan84/Coffee_Shop/releases/download/android-v1.0/CoffeeShop.apk)
+(from the [android-v1.0 release](https://github.com/samadhan84/Coffee_Shop/releases/tag/android-v1.0)).
+Open it on the phone and allow **Install unknown apps** when Android asks. Needs Android 5.0 or newer.
+
+- Logins stay signed in; the Back button goes to the previous page.
+- Links to other sites open in the phone's browser; there's an offline screen with Retry.
+- The receipt's Print button and CSV report downloads work inside the app.
+
+The APK is built by the **Android APK** workflow on every change under `android/`. To change the website
+address, edit `app_url` / `app_host` in `android/app/build.gradle` (and the host in `AndroidManifest.xml`).
+The app is signed with a demo key kept in the repo — fine for sharing the APK, but use your own private key
+for a Google Play release.
+
 ## Setup (XAMPP / WAMP)
 
 1. Install [XAMPP](https://www.apachefriends.org/) and start **Apache** and **MySQL**.
