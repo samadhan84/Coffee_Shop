@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.gaurav.coffeeshop'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.gaurav.coffeeshop'
+        minSdk 21
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+        // The web application this app opens.
+        resValue 'string', 'app_url', 'https://gauravcoffeeshop.site.je/'
+        resValue 'string', 'app_host', 'gauravcoffeeshop.site.je'
+    }
+
+    // Demo signing key kept in the repo so every build can be installed as an
+    // update of the previous one. Use your own private key for a Play Store release.
+    signingConfigs {
+        demo {
+            storeFile file('coffeeshop-demo.jks')
+            storePassword 'coffeeshop'
+            keyAlias 'coffeeshop'
+            keyPassword 'coffeeshop'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.demo
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

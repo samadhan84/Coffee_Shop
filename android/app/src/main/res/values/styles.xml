@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/brown_dark</item>
+        <item name="android:colorPrimaryDark">@color/brown_dark</item>
+        <item name="android:colorAccent">@color/yellow</item>
+        <item name="android:statusBarColor">@color/brown_dark</item>
+        <item name="android:navigationBarColor">@color/brown_dark</item>
+        <!-- Shown as a splash screen while the app starts. -->
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+</resources>

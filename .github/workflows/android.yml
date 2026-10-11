@@ -1,0 +1,55 @@
+# Builds the Android app (android/) and publishes the APK as a GitHub Release.
+name: Android APK
+
+on:
+  push:
+    paths:
+      - 'android/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build release APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleRelease
+
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk CoffeeShop.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoffeeShop-apk
+          path: CoffeeShop.apk
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=android-v1.0
+          NOTES="Android app for Coffee Shop Management System. Opens https://gauravcoffeeshop.site.je/ in the app. Built from ${GITHUB_SHA::7}."
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" CoffeeShop.apk --clobber
+            gh release edit "$TAG" --notes "$NOTES"
+          else
+            gh release create "$TAG" CoffeeShop.apk --target "$GITHUB_SHA" --title "Coffee Shop Android App v1.0" --notes "$NOTES"
+          fi

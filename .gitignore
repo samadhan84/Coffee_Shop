@@ -4,3 +4,8 @@ Thumbs.db
 .idea/
 .vscode/
 config/config.local.php
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.iml

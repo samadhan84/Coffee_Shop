@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Coffee Shop</string>
+    <string name="offline_title">You\'re offline</string>
+    <string name="offline_message">Couldn\'t reach Coffee Shop. Check your internet connection and try again.</string>
+    <string name="retry">Retry</string>
+    <string name="no_app_for_link">No app found to open this link</string>
+    <string name="allow_storage">Allow storage access, then tap the download again</string>
+    <string name="downloading">Downloading %1$s…</string>
+</resources>
