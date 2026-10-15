@@ -10,7 +10,7 @@ the same engine the real Arduino IDE 2 uses, which ships inside the app.
 ## Download
 
 Every push to `arduino-ide/` builds the app on GitHub Actions (**Actions → Arduino IDE (Windows)**).
-- **Artifact** `MiniArduinoIDE-windows` on each run: an installer (`…-nsis.exe`) and a portable exe that runs without installing.
+- **Artifact** `MiniArduinoIDE-windows` on each run: an installer (`MiniArduinoIDE-1.0.0-setup.exe`) and a portable exe that runs without installing.
 - On the default branch (or when run by hand) the same files are published as the **`arduino-ide-v1.0`** release.
 
 Windows SmartScreen may warn because the exe isn't code-signed: click **More info → Run anyway**.

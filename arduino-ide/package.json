@@ -32,15 +32,24 @@
       "node_modules/codemirror/addon/selection/active-line.js"
     ],
     "extraResources": [
-      { "from": "bin", "to": "bin", "filter": ["arduino-cli*"] }
+      {
+        "from": "bin",
+        "to": "bin",
+        "filter": [
+          "arduino-cli*"
+        ]
+      }
     ],
     "win": {
-      "target": ["nsis", "portable"],
-      "artifactName": "MiniArduinoIDE-${version}-${arch}-${target}.${ext}"
+      "target": [
+        "nsis",
+        "portable"
+      ]
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "MiniArduinoIDE-${version}-setup.${ext}"
     },
     "portable": {
       "artifactName": "MiniArduinoIDE-${version}-portable.exe"
