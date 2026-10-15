@@ -154,3 +154,10 @@ total      = subtotal − discount + tax + extra charges
 ```
 
 Prices are always taken from the database on the server, so the bill cannot be altered from the browser.
+
+## Mini Arduino IDE (Windows desktop app)
+
+The `arduino-ide/` folder contains a separate project: a small Arduino IDE style Windows app for writing,
+compiling and uploading code to Arduino Uno / Nano / Mega and ESP32 boards, with a serial monitor.
+See [`arduino-ide/README.md`](arduino-ide/README.md). The Windows installer is built by the
+**Arduino IDE (Windows)** GitHub Actions workflow.

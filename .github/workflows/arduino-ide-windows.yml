@@ -1,0 +1,60 @@
+# Builds the Mini Arduino IDE (arduino-ide/) for Windows and publishes the installer as a GitHub Release.
+name: Arduino IDE (Windows)
+
+on:
+  push:
+    paths:
+      - 'arduino-ide/**'
+      - '.github/workflows/arduino-ide-windows.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: arduino-ide
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download arduino-cli
+        run: npm run fetch-cli
+
+      - name: Compile the examples for Uno and ESP32
+        run: node scripts/smoke-test.js
+
+      - name: Build installer and portable exe
+        run: npx electron-builder --win nsis portable --x64 --publish never
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MiniArduinoIDE-windows
+          path: |
+            arduino-ide/dist/*.exe
+
+      - name: Publish GitHub Release
+        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=arduino-ide-v1.0
+          NOTES="Mini Arduino IDE for Windows: write, compile and upload sketches to Arduino Uno/Nano/Mega and ESP32 boards. Built from ${GITHUB_SHA::7}."
+          FILES=$(ls dist/*.exe)
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" $FILES --clobber
+            gh release edit "$TAG" --notes "$NOTES"
+          else
+            gh release create "$TAG" $FILES --target "$GITHUB_SHA" --title "Mini Arduino IDE v1.0 (Windows)" --notes "$NOTES"
+          fi

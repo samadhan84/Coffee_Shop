@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Mini Arduino IDE</title>
+  <link rel="stylesheet" href="../node_modules/codemirror/lib/codemirror.css">
+  <link rel="stylesheet" href="../node_modules/codemirror/theme/material-darker.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="toolbar">
+    <button id="btnVerify" class="round" title="Verify / Compile (Ctrl+R)">✔</button>
+    <button id="btnUpload" class="round" title="Upload (Ctrl+U)">➜</button>
+    <button id="btnCancel" class="round hidden" title="Stop">■</button>
+    <span class="sep"></span>
+    <button id="btnNew" title="New (Ctrl+N)">New</button>
+    <button id="btnOpen" title="Open (Ctrl+O)">Open</button>
+    <button id="btnSave" title="Save (Ctrl+S)">Save</button>
+    <select id="examples" title="Examples"><option value="">Examples…</option></select>
+    <span class="sep"></span>
+    <label>Board <select id="board"></select></label>
+    <label>Port <select id="port"><option value="">(no port)</option></select></label>
+    <button id="btnRefresh" title="Refresh ports">⟳</button>
+    <span class="grow"></span>
+    <button id="btnSetup" title="Install Arduino AVR / ESP32 board support">Board Setup</button>
+    <button id="btnMonitor" title="Serial Monitor (Ctrl+Shift+M)">Serial Monitor</button>
+  </header>
+
+  <div id="coreBanner" class="banner hidden">
+    <span id="coreBannerText"></span>
+    <button id="btnInstallCore">Install now</button>
+  </div>
+
+  <main>
+    <div class="tabbar"><span id="fileName">sketch.ino</span><span id="dirty" class="hidden">●</span></div>
+    <div id="editorWrap"><textarea id="editor"></textarea></div>
+
+    <div id="splitter"></div>
+
+    <section id="bottom">
+      <div class="paneTabs">
+        <button data-pane="output" class="active">Output</button>
+        <button data-pane="monitor">Serial Monitor</button>
+        <span class="grow"></span>
+        <button id="btnClear" title="Clear">Clear</button>
+      </div>
+      <pre id="output" class="pane"></pre>
+      <div id="monitor" class="pane hidden">
+        <div class="monitorBar">
+          <input id="monitorInput" placeholder="Message (Enter to send)">
+          <select id="lineEnding">
+            <option value="">No line ending</option>
+            <option value="\n" selected>New line</option>
+            <option value="\r">Carriage return</option>
+            <option value="\r\n">Both NL &amp; CR</option>
+          </select>
+          <select id="baud">
+            <option>300</option><option>1200</option><option>2400</option><option>4800</option>
+            <option>9600</option><option>19200</option><option>38400</option><option>57600</option>
+            <option selected>115200</option><option>230400</option><option>460800</option><option>921600</option>
+          </select>
+          <label class="check"><input type="checkbox" id="autoscroll" checked> Autoscroll</label>
+          <button id="btnMonitorToggle">Connect</button>
+        </div>
+        <pre id="monitorOut"></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="status">
+    <span id="statusText">Ready</span>
+    <span class="grow"></span>
+    <span id="cursorPos">Ln 1, Col 1</span>
+    <span id="statusBoard"></span>
+    <span id="cliVersion"></span>
+  </footer>
+
+  <div id="dialog" class="modal hidden">
+    <div class="modalBox">
+      <h3 id="dialogTitle"></h3>
+      <div id="dialogBody"></div>
+      <div class="modalButtons">
+        <button id="dialogCancel">Cancel</button>
+        <button id="dialogOk" class="primary">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+  <script src="../node_modules/codemirror/mode/clike/clike.js"></script>
+  <script src="../node_modules/codemirror/addon/edit/matchbrackets.js"></script>
+  <script src="../node_modules/codemirror/addon/edit/closebrackets.js"></script>
+  <script src="../node_modules/codemirror/addon/selection/active-line.js"></script>
+  <script src="boards.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

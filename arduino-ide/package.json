@@ -1,0 +1,49 @@
+{
+  "name": "uno-esp32-ide",
+  "productName": "Mini Arduino IDE",
+  "version": "1.0.0",
+  "description": "A small Arduino IDE style desktop app for Arduino Uno / Nano / Mega and ESP32 boards, built on arduino-cli.",
+  "main": "main.js",
+  "author": "Coffee Shop project",
+  "license": "MIT",
+  "scripts": {
+    "fetch-cli": "node scripts/fetch-arduino-cli.js",
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis portable --x64"
+  },
+  "dependencies": {
+    "codemirror": "5.65.18"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "com.coffeeshop.miniarduinoide",
+    "productName": "Mini Arduino IDE",
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**",
+      "node_modules/codemirror/lib/**",
+      "node_modules/codemirror/mode/clike/**",
+      "node_modules/codemirror/theme/material-darker.css",
+      "node_modules/codemirror/addon/edit/**",
+      "node_modules/codemirror/addon/selection/active-line.js"
+    ],
+    "extraResources": [
+      { "from": "bin", "to": "bin", "filter": ["arduino-cli*"] }
+    ],
+    "win": {
+      "target": ["nsis", "portable"],
+      "artifactName": "MiniArduinoIDE-${version}-${arch}-${target}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "portable": {
+      "artifactName": "MiniArduinoIDE-${version}-portable.exe"
+    }
+  }
+}
